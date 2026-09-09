@@ -4,6 +4,12 @@ import { Rol } from "../../generated/prisma/enums";
 import { json } from "node:stream/consumers";
 import { EstadoTickets } from "../../generated/prisma/enums";
 export const getTicket = async (req: Request, res: Response) => {
+  /* 
+    #swagger.security = [{ "bearerAuth": [] }]
+    #swagger.tags = ["Tickets"]
+    #swagger.summary = "ver a todos los tickets"
+    #swagger.description= "Permite visualizar el listado de todos los tickets"
+  */
   try {
     const ticket = await TicketModel.getAll();
     return res.status(200).json({ data: ticket });
@@ -13,6 +19,18 @@ export const getTicket = async (req: Request, res: Response) => {
 };
 
 export const postTicket = async (req: Request, res: Response) => {
+  /* 
+    #swagger.security = [{ "bearerAuth": [] }]
+    #swagger.tags = ["Tickets"]
+    #swagger.summary = "Un profesor o director crear un ticket"
+    #swagger.description= "Permite la creacion de un ticket"
+     #swagger.requestBody ={
+      required:true,
+      schema:{
+        $ref:"#/components/schemas/ticketDTO"
+      }
+    }
+  */
   try {
     const { titulo, descripcion, aula } = req.body;
     let creadorId = req.user?.id;
@@ -34,6 +52,18 @@ export const postTicket = async (req: Request, res: Response) => {
 };
 
 export const UpdateTicket = async (req: Request, res: Response) => {
+  /* 
+    #swagger.security = [{ "bearerAuth": [] }]
+    #swagger.tags = ["Tickets"]
+    #swagger.summary = "Un tecnicio cambia el estado de  un ticket"
+    #swagger.description= "Permite la actualizacion del estado de un ticket"
+     #swagger.requestBody ={
+      required:true,
+      schema:{
+        $ref:"#/components/schemas/tickertUpdateDTO"
+      }
+    }
+  */
   try {
     const { estado } = req.body;
     const tecnicoId = req.user!.id;

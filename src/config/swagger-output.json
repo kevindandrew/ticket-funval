@@ -1,0 +1,372 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "API - tickets y usuarios",
+    "description": "Documentacion del sistema de tickets",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000/"
+    }
+  ],
+  "paths": {
+    "/auth/register": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Registrar un usuario nuevo",
+        "description": "registra a un usuario nuevo en el sistema",
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/registerDTO"
+              }
+            },
+            "application/xml": {
+              "schema": {
+                "$ref": "#/components/schemas/registerDTO"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Inicio de Sesion",
+        "description": "Autentica a un usuario y retorna su JWT",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/loginDTO"
+              }
+            },
+            "application/xml": {
+              "schema": {
+                "$ref": "#/components/schemas/loginDTO"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/usuarios/": {
+      "get": {
+        "tags": [
+          "Usuarios"
+        ],
+        "summary": "ver a todos los usuarios",
+        "description": "Permite visualizar el listado de todos los usuarios",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/tickets/": {
+      "get": {
+        "tags": [
+          "Tickets"
+        ],
+        "summary": "ver a todos los tickets",
+        "description": "Permite visualizar el listado de todos los tickets",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Tickets"
+        ],
+        "summary": "Un profesor o director crear un ticket",
+        "description": "Permite la creacion de un ticket",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ticketDTO"
+              }
+            },
+            "application/xml": {
+              "schema": {
+                "$ref": "#/components/schemas/ticketDTO"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tickets/{id}": {
+      "put": {
+        "tags": [
+          "Tickets"
+        ],
+        "summary": "Un tecnicio cambia el estado de un ticket",
+        "description": "Permite la actualizacion del estado de un ticket",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/tickertUpdateDTO"
+              }
+            },
+            "application/xml": {
+              "schema": {
+                "$ref": "#/components/schemas/tickertUpdateDTO"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "Rol": {
+        "example": "PROFESOR",
+        "type": "string",
+        "enum": [
+          "PROFESOR",
+          "TECNICO",
+          "DIRECTOR"
+        ],
+        "xml": {
+          "name": "Rol"
+        }
+      },
+      "EstadoTicket": {
+        "type": "string",
+        "enum": [
+          "ABIERTO",
+          "EN_PROCESO",
+          "RESULTO"
+        ],
+        "xml": {
+          "name": "EstadoTicket"
+        }
+      },
+      "loginDTO": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "example": "kevinfunval@gmail.com"
+          },
+          "password": {
+            "type": "string",
+            "example": "123456789"
+          }
+        },
+        "xml": {
+          "name": "loginDTO"
+        }
+      },
+      "registerDTO": {
+        "type": "object",
+        "properties": {
+          "nombre": {
+            "type": "string",
+            "example": "juan perez"
+          },
+          "email": {
+            "type": "string",
+            "example": "juanfunval@gmail.com"
+          },
+          "password": {
+            "type": "string",
+            "example": "123456789"
+          },
+          "rol": {
+            "type": "string",
+            "example": "PROFESOR"
+          }
+        },
+        "xml": {
+          "name": "registerDTO"
+        }
+      },
+      "ticketDTO": {
+        "type": "object",
+        "properties": {
+          "titulo": {
+            "type": "string",
+            "example": "error de prendido"
+          },
+          "descripcion": {
+            "type": "string",
+            "example": "la pc numero 3 esta fallando al prender"
+          },
+          "aula": {
+            "type": "string",
+            "example": "101-A"
+          }
+        },
+        "xml": {
+          "name": "ticketDTO"
+        }
+      },
+      "tickertUpdateDTO": {
+        "type": "object",
+        "properties": {
+          "estado": {
+            "type": "string",
+            "example": "EN_PROCESO"
+          }
+        },
+        "xml": {
+          "name": "tickertUpdateDTO"
+        }
+      }
+    }
+  }
+}
