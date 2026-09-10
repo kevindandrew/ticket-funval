@@ -1,5 +1,6 @@
 import { prisma } from "../config/prisma";
 import { Rol } from "../../generated/prisma/enums";
+import { omit } from "zod/mini";
 
 export interface RegistrarUsuario {
   nombre: string;
@@ -10,7 +11,11 @@ export interface RegistrarUsuario {
 
 export const UsuarioModel = {
   getAll: async () => {
-    return await prisma.usuario.findMany();
+    return await prisma.usuario.findMany({
+      omit: {
+        password: true,
+      },
+    });
   },
   crear: async (data: RegistrarUsuario) => {
     return await prisma.usuario.create({
